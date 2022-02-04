@@ -20,3 +20,16 @@ wordcount:
 	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} bde2020/hadoop-base:$(current_branch) hdfs dfs -cat /output/*
 	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} bde2020/hadoop-base:$(current_branch) hdfs dfs -rm -r /output
 	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} bde2020/hadoop-base:$(current_branch) hdfs dfs -rm -r /input
+
+start:
+	docker-compose up -d
+
+start-monitor:
+	docker-compose up
+
+start-fresh:
+	docker volume rm $(shell docker volume ls -q)
+	docker-compose up -d
+
+stop:
+	docker-compose down
