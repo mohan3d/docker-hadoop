@@ -18,7 +18,7 @@ RUN curl -O https://dist.apache.org/repos/dist/release/hadoop/common/KEYS
 
 RUN gpg --import KEYS
 
-ENV HADOOP_VERSION 3.2.1
+ENV HADOOP_VERSION 2.10.1
 ENV HADOOP_URL https://www.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
 
 RUN set -x \
@@ -29,6 +29,10 @@ RUN set -x \
     && rm /tmp/hadoop.tar.gz*
 
 RUN ln -s /opt/hadoop-$HADOOP_VERSION/etc/hadoop /etc/hadoop
+# TODO: remove this one
+RUN cp /etc/hadoop/mapred-site.xml.template /etc/hadoop/mapred-site.xml
+RUN echo "" > /etc/hadoop/slaves
+RUN apt-get update && apt-get install -y procps openssh-client && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /opt/hadoop-$HADOOP_VERSION/logs
 
