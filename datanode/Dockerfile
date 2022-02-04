@@ -1,5 +1,5 @@
-# FROM bde2020/hadoop-base:2.0.0-hadoop3.2.1-java8
-FROM bde2020/hadoop-base:master
+ARG TAG=latest
+FROM bde2020/hadoop-base:${TAG}
 
 MAINTAINER Ivan Ermilov <ivan.s.ermilov@gmail.com>
 

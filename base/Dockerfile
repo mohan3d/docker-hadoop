@@ -19,16 +19,23 @@ RUN curl -O https://dist.apache.org/repos/dist/release/hadoop/common/KEYS
 RUN gpg --import KEYS
 
 ENV HADOOP_VERSION 2.10.1
-ENV HADOOP_URL https://www.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
+# ENV HADOOP_URL https://www.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
+
+
+# RUN set -x \
+#     && curl -fSL "$HADOOP_URL" -o /tmp/hadoop.tar.gz \
+#     && curl -fSL "$HADOOP_URL.asc" -o /tmp/hadoop.tar.gz.asc \
+#     && gpg --verify /tmp/hadoop.tar.gz.asc \
+#     && tar -xvf /tmp/hadoop.tar.gz -C /opt/ \
+#     && rm /tmp/hadoop.tar.gz*
 
 RUN set -x \
     && curl -fSL "$HADOOP_URL" -o /tmp/hadoop.tar.gz \
-    && curl -fSL "$HADOOP_URL.asc" -o /tmp/hadoop.tar.gz.asc \
-    && gpg --verify /tmp/hadoop.tar.gz.asc \
     && tar -xvf /tmp/hadoop.tar.gz -C /opt/ \
     && rm /tmp/hadoop.tar.gz*
 
-RUN ln -s /opt/hadoop-$HADOOP_VERSION/etc/hadoop /etc/hadoop
+RUN ln -s /opt/hadoop-$HADOOP_VERSION/etc/hadoop/ /etc/hadoop
+RUN ls /etc/hadoop
 # TODO: remove this one
 RUN cp /etc/hadoop/mapred-site.xml.template /etc/hadoop/mapred-site.xml
 RUN echo "" > /etc/hadoop/slaves
