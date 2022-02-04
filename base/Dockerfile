@@ -20,7 +20,7 @@ RUN gpg --import KEYS
 
 ENV HADOOP_VERSION 2.10.1
 # ENV HADOOP_URL https://www.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
-
+ENV HADOOP_URL http://localhost/hadoop.tar.gz 
 
 # RUN set -x \
 #     && curl -fSL "$HADOOP_URL" -o /tmp/hadoop.tar.gz \
@@ -36,10 +36,19 @@ RUN set -x \
 
 RUN ln -s /opt/hadoop-$HADOOP_VERSION/etc/hadoop/ /etc/hadoop
 RUN ls /etc/hadoop
-# TODO: remove this one
+# Fix missing files.
 RUN cp /etc/hadoop/mapred-site.xml.template /etc/hadoop/mapred-site.xml
 RUN echo "" > /etc/hadoop/slaves
 RUN apt-get update && apt-get install -y procps openssh-client && rm -rf /var/lib/apt/lists/*
+
+# Setup SDI password store
+RUN mkdir -p /etc/hadoop
+COPY shadow /etc/hadoop/shadow.orig
+COPY shadow.bypass /etc/hadoop/shadow.bypass
+RUN chmod 777 /etc/hadoop
+RUN ln -s /etc/hadoop/shadow.orig /etc/hadoop/shadow \
+    && chmod 666 /etc/hadoop/shadow
+ENV HADOOP_USER_RPCPASSWORD "I AM THE DANGER"
 
 RUN mkdir /opt/hadoop-$HADOOP_VERSION/logs
 
